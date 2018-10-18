@@ -12,8 +12,27 @@ bool ray_intersect_triangle_mesh_brute_force(
 {
   ////////////////////////////////////////////////////////////////////////////
   // Replace with your code here:
-  hit_t = 0;
-  hit_f = 0;
-  return false;
+  int counter = 0;
+  double t_holder;
+  //Holders for each point in triangle to help put into triangle intersect function
+  Eigen::RowVector3d a_holder, b_holder, c_holder;
+  for(int i = 0; i < F.rows(); i = i + 1) {
+    a_holder = V.row(F(i, 0));
+    b_holder = V.row(F(i, 1));
+    c_holder = V.row(F(i, 2));
+    if(ray_intersect_triangle(ray, a_holder, b_holder, c_holder, min_t, max_t, t_holder)) {
+      if(counter == 0 || t_holder < hit_t) {
+        hit_t = t_holder;
+        hit_f = i;
+      }
+      counter = counter + 1;
+    }
+  }
+  //If counter is at 0, that means no hits were found
+  if(counter == 0) {
+    return false;
+  } else {
+    return true;
+  }
   ////////////////////////////////////////////////////////////////////////////
 }
